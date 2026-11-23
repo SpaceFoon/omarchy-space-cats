@@ -1159,15 +1159,18 @@ def near_a_cat(w, chance, fallback, spread):
     return min(max(random.choice(cats).y + U(-spread, spread), 1), max(2, w.H - 10))
 
 
-PUSHER = [art(r"""
-  /\_/\
- ( >.< )=
-  /   \
-"""), art(r"""
-  /\_/\
- ( >.< )=
-   | |
-""")]
+# The cat out the back of a stalled shuttle, in its helmet, paws braced against the engines
+# (the "==" on the arm row), legs pumping between two frames.
+PUSHER_TOP = art(r"""
+ .-'''''-.
+/¬¬/\_/\¬¬\
+|¬¬(>.<)¬¬|
+\¬¬¬>^<¬¬¬/
+ '-.___.-'
+  /|[=#]|==
+""")
+PUSHER = [PUSHER_TOP + [" /_/   \\_\\"], PUSHER_TOP + ["  \\_\\ /_/"]]
+PUSH_ARMS = 5  # sprite row the arms are on
 
 
 class RocketCat(Ent):
@@ -1231,7 +1234,7 @@ class RocketCat(Ent):
         elif random.random() < dt * 12:
             w.add(Particle(self.x - 1, self.y + 4.5 + U(-1, 1), -U(2, 9), -U(1, 4), U(0.8, 1.6), "▒░░··", SMOKE))
         if m == "push" and random.random() < dt * 5:  # sweat
-            w.add(Particle(self.x - 6, self.y + 3, -U(2, 6), -U(2, 5), 0.6, "'·", [(150, 210, 255), (0, 0, 0)]))
+            w.add(Particle(self.x - 9, self.y - 1, -U(2, 6), -U(2, 5), 0.6, "'·", [(150, 210, 255), (0, 0, 0)]))
         self.dead = self.x > w.W + 30
 
     def draw(self, w, s):
@@ -1267,7 +1270,11 @@ class RocketCat(Ent):
                 "▓": (140, 150, 178), "▐": glow, "▒": (90, 200, 255)}  # ▓ = payload-bay doors
         s.sprite(shades(w, lines), self.x, self.y, hull, over, w.t)
         if self.mode == "push":
-            s.sprite(shades(w, PUSHER[int(w.t * 6) % 2]), self.x - 10, self.y + 3, WHITE, {"=": self.col})
+            # Arms end right at the engine bells, level with them (ship row 4).
+            px, py = self.x - len(PUSHER_TOP[PUSH_ARMS]), self.y + 4 - PUSH_ARMS
+            red = (255, 60, 60) if int(w.t * 2) % 2 else (90, 20, 20)
+            s.sprite(shades(w, PUSHER[int(w.t * 6) % 2]), px, py, mix(WHITE, self.col, 0.25),
+                     {"=": self.col, "#": red, ">": WHITE, "<": WHITE, ".": WHITE, "^": self.col})
         if self.engine:
             # Engine plume: shines backwards only. The hull blocks it, so just the engine end catches the glow.
             w.lights.append((self.x - 6, self.y + 4.5, 13, (255, 150, 60), 0.75 + 0.25 * math.sin(w.t * 31), self.x + 2))
