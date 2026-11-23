@@ -112,12 +112,12 @@ class Painter:
 
 def main():
     ap = argparse.ArgumentParser(description=__doc__, formatter_class=argparse.RawDescriptionHelpFormatter)
-    ap.add_argument("--cols", type=int, default=124)
+    ap.add_argument("--cols", type=int, default=180)
     ap.add_argument("--rows", type=int, default=34)
     ap.add_argument("--font-size", type=int, default=12)
     ap.add_argument("--secs", type=float, default=26)
     ap.add_argument("--fps", type=int, default=12, help="GIF frame rate (the simulation always runs at 30)")
-    ap.add_argument("--seed", type=int, default=18)
+    ap.add_argument("--seed", type=int, default=7)
     ap.add_argument("--out", default=os.path.join(ROOT, "docs", "space-cats.gif"))
     a = ap.parse_args()
     if not shutil.which("ffmpeg"):
