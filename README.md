@@ -4,7 +4,7 @@ An animated, almost-all-ASCII screensaver for [Omarchy](https://omarchy.org): as
 through space, getting into trouble. It replaces Omarchy's stock screensaver, follows your current
 theme's colours, and spans all your monitors as one continuous scene.
 
-<!-- TODO: add a GIF here (record with `omarchy screenrecord`) -->
+![Space Cats running: a saucer towing a SPACE CATS banner, a shuttle, a black hole and floating cats](docs/space-cats.gif)
 
 ## What's in it
 
@@ -92,6 +92,12 @@ How long until the screensaver starts, and when the screen locks, are Omarchy's 
 ```
 
 Both are seconds of idle time; the example runs the screensaver for 15 minutes before locking.
+
+## Regenerating the GIF
+
+`tools/render-gif.py` renders the README animation offscreen from the simulation itself (no screen
+recording), using Omarchy's JetBrains Mono font. It needs Pillow and ffmpeg, which the screensaver
+itself does not.
 
 ## License
 
