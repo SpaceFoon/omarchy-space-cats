@@ -1,0 +1,39 @@
+#!/bin/bash
+# Space Cats, run inside one org.omarchy.screensaver terminal window (one per monitor).
+# Started by the omarchy-launch-screensaver shim with the monitor name as $1.
+# Mirrors Omarchy's stock screensaver: hides the cursor, and any key or the window
+# losing focus ends it on every monitor.
+
+here=$(dirname "$(readlink -f "$0")")
+tty=$(tty 2>/dev/null)
+python=/usr/bin/python3
+[[ -x $python ]] || python=python3  # prefer the system Python over any per-project one
+
+screensaver_in_focus() {
+  hyprctl activewindow -j | jq -e '.class == "org.omarchy.screensaver"' >/dev/null 2>&1
+}
+
+exit_screensaver() {
+  hyprctl eval 'hl.config({ cursor = { invisible = false } })' &>/dev/null || hyprctl keyword cursor:invisible false &>/dev/null || true
+  [[ -n $watcher ]] && kill "$watcher" 2>/dev/null
+  rm -rf "${XDG_RUNTIME_DIR:-/tmp}/space-cats"  # shared clock + monitor sizes for this run
+  pkill -f '[o]rg.omarchy.screensaver' 2>/dev/null
+  exit 0
+}
+
+trap exit_screensaver SIGINT SIGTERM SIGHUP SIGQUIT
+
+hyprctl eval 'hl.config({ cursor = { invisible = true } })' &>/dev/null || hyprctl keyword cursor:invisible true &>/dev/null
+
+# Stop the animation once the screensaver window is no longer the focused one.
+(
+  sleep 1
+  while screensaver_in_focus; do sleep 1; done
+  pkill -TERM -t "${tty#/dev/}" -f space-cats.py
+) &
+watcher=$!
+
+# The animation quits on any keypress and follows terminal resizes itself.
+"$python" "$here/../space-cats.py" "$@"
+
+exit_screensaver

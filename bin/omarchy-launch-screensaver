@@ -1,0 +1,21 @@
+#!/bin/bash
+# Stand-in for Omarchy's omarchy-launch-screensaver. install.sh puts its folder at the front
+# of PATH (via ~/.bashrc), so Omarchy's idle timer runs this instead of the stock launcher.
+#
+# It runs Omarchy's own launcher unchanged except for one thing: each screensaver window
+# starts Space Cats (with its monitor name) instead of the stock screensaver. Everything
+# else (terminal detection, one window per monitor, focus handling) stays Omarchy's.
+#
+# If Space Cats is missing, or a future Omarchy changes its launcher so the swap no longer
+# applies, this quietly runs the stock launcher instead.
+
+stock="${OMARCHY_PATH:-/usr/share/omarchy}/bin/omarchy-launch-screensaver"
+custom="$HOME/.local/share/space-cats/bin/space-cats-screensaver"
+swap='-e omarchy-screensaver'
+
+if [[ ! -x $custom ]] || ! grep -q -- "$swap" "$stock" 2>/dev/null; then
+  exec "$stock" "$@"
+fi
+
+# $m is the stock launcher's loop variable: the monitor each window is opened on.
+exec bash <(sed "s#$swap#-e $custom \"\$m\"#" "$stock") "$@"
