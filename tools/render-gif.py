@@ -23,10 +23,12 @@ ROOT = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 FONT = "/usr/share/fonts/TTF/JetBrainsMonoNerdFont-Regular.ttf"  # Omarchy's default terminal font
 FALLBACK = "/usr/share/fonts/Adwaita/AdwaitaMono-Regular.ttf"   # for glyphs it lacks, like ✦
 
-# A highlight reel: bring most events into the first ~25 seconds (seconds from start).
-SCHEDULE = {"banner": 0.5, "rocket": 3.0, "box": 2.0, "planet": 0.0, "ufo": 9.0, "runner": 5.0,
-            "hole": 11.0, "mouse": 15.0, "pulsar": 18.0, "yarn": 20.0, "cuke": 7.0, "sat": 1e9,
-            "moon": 1e9, "warp": 23.5, "shower": 1e9, "const": 1e9}
+# A calm highlight reel (seconds from start): a few set pieces with room to breathe. Everything
+# else is pushed past the end. The screensaver itself is unaffected.
+NEVER = 1e9
+SCHEDULE = {"planet": 0.0, "banner": 0.5, "rocket": 4.0, "runner": 11.0, "hole": 15.0, "pulsar": 21.0,
+            "warp": NEVER, "ufo": NEVER, "box": NEVER, "mouse": NEVER, "yarn": NEVER, "cuke": NEVER,
+            "sat": NEVER, "moon": NEVER, "shower": NEVER, "const": NEVER}
 
 
 def load_sim():
@@ -113,9 +115,9 @@ def main():
     ap.add_argument("--cols", type=int, default=124)
     ap.add_argument("--rows", type=int, default=34)
     ap.add_argument("--font-size", type=int, default=12)
-    ap.add_argument("--secs", type=float, default=25)
+    ap.add_argument("--secs", type=float, default=26)
     ap.add_argument("--fps", type=int, default=12, help="GIF frame rate (the simulation always runs at 30)")
-    ap.add_argument("--seed", type=int, default=19)
+    ap.add_argument("--seed", type=int, default=18)
     ap.add_argument("--out", default=os.path.join(ROOT, "docs", "space-cats.gif"))
     a = ap.parse_args()
     if not shutil.which("ffmpeg"):
