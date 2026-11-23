@@ -115,7 +115,7 @@ def main():
     ap.add_argument("--font-size", type=int, default=12)
     ap.add_argument("--secs", type=float, default=25)
     ap.add_argument("--fps", type=int, default=12, help="GIF frame rate (the simulation always runs at 30)")
-    ap.add_argument("--seed", type=int, default=7)
+    ap.add_argument("--seed", type=int, default=19)
     ap.add_argument("--out", default=os.path.join(ROOT, "docs", "space-cats.gif"))
     a = ap.parse_args()
     if not shutil.which("ffmpeg"):
