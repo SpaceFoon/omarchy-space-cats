@@ -28,7 +28,7 @@ theme's colours, and spans all your monitors as one continuous scene.
 ## Install
 
 ```bash
-git clone https://github.com/OWNER/omarchy-space-cats.git
+git clone https://github.com/SpaceFoon/omarchy-space-cats.git
 cd omarchy-space-cats
 ./install.sh
 ```
